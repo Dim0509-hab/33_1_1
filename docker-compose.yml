@@ -1,0 +1,60 @@
+services:
+  # Backend (Laravel)
+  backend:
+    build:
+      context: ./backend
+    container_name: messenger-backend
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "9000:9000"
+    networks:
+      - app-network
+    depends_on:
+      - db
+      - mailhog
+
+  # Frontend (Vue 3)
+  frontend:
+    build:
+      context: ./frontend
+    container_name: messenger-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  # MySQL
+  db:
+    image: mysql:8
+    container_name: messenger-db
+    environment:
+      MYSQL_DATABASE: messenger
+      MYSQL_USER: messenger
+      MYSQL_PASSWORD: messenger
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network
+
+  # Mailhog
+  mailhog:
+    image: mailhog/mailhog
+    container_name: messenger-mailhog
+    ports:
+      - "8025:8025"  # UI
+      - "1025:1025"  # SMTP
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
