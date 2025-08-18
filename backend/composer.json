@@ -12,5 +12,8 @@
         "psr-4": {
             "Tests\\": "tests/"
         }
+    },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.6"
     }
 }

@@ -2,9 +2,9 @@
   <div>
     <h2>Регистрация</h2>
     <form @submit.prevent="register">
-      <input v-model="name" placeholder="Имя" required />
-      <input v-model="email" type="email" placeholder="Email" required />
-      <input v-model="password" type="password" placeholder="Пароль" required />
+      <input v-model="name" placeholder="Имя" />
+      <input v-model="email" placeholder="Email" />
+      <input v-model="password" type="password" placeholder="Пароль" />
       <button type="submit">Зарегистрироваться</button>
     </form>
   </div>
@@ -22,9 +22,16 @@ const router = useRouter();
 
 const register = async () => {
   try {
-    await axios.post("/api/register", { name: name.value, email: email.value, password: password.value });
+    await axios.post("http://localhost:8000/api/register", {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password.value,
+    });
+
     router.push("/login");
   } catch (err) {
+    console.error(err);
     alert("Ошибка регистрации");
   }
 };

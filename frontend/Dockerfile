@@ -1,16 +1,19 @@
-FROM node:20
+# frontend/Dockerfile
+# Используем Node только для сборки фронта
+FROM node:20 AS build
 
 WORKDIR /app
 
-# сначала копируем package.json + package-lock.json (если есть)
+# Копируем package.json и lock-файл (для кэша зависимостей)
 COPY package*.json ./
 
-# устанавливаем зависимости вместе с devDependencies
+# Устанавливаем зависимости (dev нужны для билда)
 RUN npm install --include=dev
 
-# копируем остальное приложение
+# Копируем весь проект
 COPY . .
 
-EXPOSE 3000
+# Собираем production-бандл
+RUN npm run build
 
-CMD ["npm", "run", "dev", "--", "--host"]
+# На выходе получаем /app/dist
