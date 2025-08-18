@@ -1,32 +1,61 @@
 <template>
-  <div class="login">
-    <h1>Вход</h1>
-    <input v-model="email" placeholder="Email" />
-    <input v-model="password" type="password" placeholder="Пароль" />
-    <button @click="login">Войти</button>
+  <div class="login-page">
+    <h2>Вход</h2>
+    <form @submit.prevent="login">
+      <input v-model="email" type="email" placeholder="Email" required />
+      <input v-model="password" type="password" placeholder="Пароль" required />
+      <button type="submit">Войти</button>
+    </form>
+    <p>
+      Нет аккаунта?
+      <router-link to="/register">Регистрация</router-link>
+    </p>
   </div>
 </template>
 
 <script>
-import API from "../api";
-
 export default {
+  name: "Login",
   data() {
-    return { email: "", password: "" };
+    return {
+      email: "",
+      password: "",
+    };
   },
   methods: {
-    async login() {
-      try {
-        const res = await API.post("/login", {
-          email: this.email,
-          password: this.password
-        });
-        localStorage.setItem("token", res.data.token);
-        this.$router.push("/chats");
-      } catch (e) {
-        alert("Ошибка входа");
+    login() {
+      // пока имитация входа
+      if (this.email && this.password) {
+        this.$router.push("/chat"); // 👈 переход в чат
+      } else {
+        alert("Введите email и пароль");
       }
-    }
-  }
+    },
+  },
 };
 </script>
+
+<style scoped>
+.login-page {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #f9f9f9;
+}
+.login-page input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+}
+.login-page button {
+  width: 100%;
+  padding: 10px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+</style>
